@@ -30,14 +30,14 @@ boolean set_gyro_angles;
 float angle_pitch_output, angle_roll_output;
 
 
-float Kp_roll = 3.25 ;               
+float Kp_roll;// = 3.25 ;               
 double Ki_roll;// =0.0 ;  //0.6            
 float Kd_roll;// =0.0;                
 int max_roll = 400;                    
 
-float Kp_pitch =3.25 ;  
-float Ki_pitch ;  
-float Kd_pitch =0.0;  
+double Kp_pitch =3.3 ;  
+double Ki_pitch = 0.05;  
+double Kd_pitch =1.8;  
 int max_pitch = max_roll;          
 
 float Kp_yaw = 4.0;                
@@ -48,16 +48,16 @@ int max_yaw = 400;
 unsigned long time,timePrev,elapsedTime;
 
 
-float error_roll, error_pitch, error_yaw;
-float error_sum_roll, previous_error_roll, delta_err_roll;
-float error_sum_pitch,previous_error_pitch,delta_err_pitch;
-float error_sum_yaw, previous_error_yaw, delta_err_yaw; 
+double error_roll, error_pitch, error_yaw;
+double error_sum_roll, previous_error_roll, delta_err_roll;
+double error_sum_pitch,previous_error_pitch,delta_err_pitch;
+double error_sum_yaw, previous_error_yaw, delta_err_yaw; 
 int pid_output_roll,pid_output_pitch,pid_output_yaw,battery_voltage;
 
 void setup(){
   DDRD |= B11110000; 
   DDRB |= B00010000;
-  Serial.begin(57600);
+ // Serial.begin(57600);
   setup_mpu_6050_registers(); 
  
   PCICR |= (1 << PCIE0);    
@@ -159,21 +159,21 @@ void loop(){
 // // Ki_pitch =Ki_roll; 
 //  }
 
-  Serial.print(esc_1);
-  Serial.print("\t");
-  Serial.print(esc_2);
-  Serial.print("\t");
-  Serial.print(esc_3);
-  Serial.print("\t");
-  Serial.print(esc_4);
+//  Serial.print(esc_1);
+//  Serial.print("\t");
+//  Serial.print(esc_2);
+//  Serial.print("\t");
+//  Serial.print(esc_3);
+//  Serial.print("\t");
+//  Serial.print(esc_4);
 //  Serial.print("\t");
 //  Serial.println(pid_output_roll);
 //  Serial.print("\t");
 //  Serial.println(elapsedTime);
 //  Serial.print("\t");
-  Serial.print(angle_roll_output);
-  Serial.print("\t");
-  Serial.println(angle_pitch_output);
+//  Serial.print(angle_roll_output);
+//  Serial.print("\t");
+//  Serial.println(angle_pitch_output);
   pid_roll_setpoint = 0;
   if(receiver_input_channel_1 > 1516)pid_roll_setpoint = (receiver_input_channel_1 - 1516);
   else if(receiver_input_channel_1 < 1506)pid_roll_setpoint = (receiver_input_channel_1 - 1506);
@@ -352,7 +352,7 @@ void calculate_pid(){
   //Pitch calculations
   error_pitch = pid_pitch_setpoint - angle_roll_output;
   
-  if(-2>error_pitch || error_pitch>3)
+ 
     error_sum_pitch +=  error_pitch;
  
   delta_err_pitch = error_pitch - previous_error_pitch;
